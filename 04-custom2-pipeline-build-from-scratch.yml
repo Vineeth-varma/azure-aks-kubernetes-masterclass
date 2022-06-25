@@ -27,7 +27,7 @@ stages:
         containerRegistry: 'appregistry179'
         repository: 'app2/nginx'
         command: 'buildAndPush'
-        Dockerfile: '****/Dockerfile'
+        Dockerfile: '**/19-Azure-DevOps-with-AKS/19-01-Azure-DevOps-BuildandPush-to-ACR/Git-Repository-files/Dockerfile'
         tags: | 
           ${tag}
           ${Build.SourceVersion}
