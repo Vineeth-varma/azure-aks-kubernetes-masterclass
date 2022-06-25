@@ -9,7 +9,7 @@ trigger:
 - master
 
 variables:
-  tag: '${Build.BuildID}'
+  tag: '$(Build.BuildID)'
   
 stages:
 # Build strate
@@ -29,8 +29,8 @@ stages:
         command: 'buildAndPush'
         Dockerfile: './19-Azure-DevOps-with-AKS/19-01-Azure-DevOps-BuildandPush-to-ACR/Git-Repository-files/Dockerfile'
         tags: |
-          ${tag}
-          ${Build.SourceVersion}
+          $(tag)
+          $(Build.SourceVersion)
     
     ## Publish Artifacts pipeline code in addition to Build and Push          
     - bash: echo Contents in System Default Working Directory; ls -R $(System.DefaultWorkingDirectory)        
