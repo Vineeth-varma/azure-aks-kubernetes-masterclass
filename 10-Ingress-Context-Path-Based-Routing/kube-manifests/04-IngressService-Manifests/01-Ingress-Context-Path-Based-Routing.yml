@@ -1,24 +1,33 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-cpr
+  name: nginxapp1-ingress-service
   annotations:
-    kubernetes.io/ingress.class: nginx  
-spec:  
+    kubernetes.io/ingress.class: nginx
+spec:
   rules:
   - http:
       paths:
-      - path: /app1/
+      - pathType: Exact
+        path: /app1/index.html
         backend:
-          serviceName: app1-nginx-clusterip-service
-          servicePort: 80
-      - path: /app2/
+          service:
+            name: app1-nginx-clusterip-service
+            port:
+              number: 80
+      - pathType: Exact
+        path: /app2/index.html
         backend:
-          serviceName: app2-nginx-clusterip-service
-          servicePort: 80          
-      - path: /
+          service:
+            name: app2-nginx-clusterip-service
+            port:
+              number: 80         
+      - pathType: Exact
+        path: /
         backend:
-          serviceName: usermgmt-webapp-clusterip-service
-          servicePort: 80          
+          service:
+            name: usermgmt-webapp-clusterip-service
+            port: 
+              number: 80          
 
   
