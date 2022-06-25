@@ -19,18 +19,18 @@
 ## Step-02: Create Static Public IP
 ```
 # Get the resource group name of the AKS cluster 
-az aks show --resource-group aks-rg1 --name aksdemo1 --query nodeResourceGroup -o tsv
+az aks show --resource-group k8s_grp --name demoCluster --query nodeResourceGroup -o tsv
 
 # TEMPLATE - Create a public IP address with the static allocation
 az network public-ip create --resource-group <REPLACE-OUTPUT-RG-FROM-PREVIOUS-COMMAND> --name myAKSPublicIPForIngress --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv
 
 # REPLACE - Create Public IP: Replace Resource Group value
-az network public-ip create --resource-group MC_aks-rg1_aksdemo1_centralus --name myAKSPublicIPForIngress --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv
+az network public-ip create --resource-group MC_k8s_grp_demoCLuster_northeurope --name myAKSPublicIPForIngress --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv
 ```
 - Make a note of Static IP which we will use in next step when installing Ingress Controller
 ```
 # Make a note of Public IP created for Ingress
-52.154.156.139
+137.116.251.139
 ```
 
 ## Step-03: Install Ingress Controller
@@ -64,7 +64,7 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
     --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
     --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
     --set controller.service.externalTrafficPolicy=Local \
-    --set controller.service.loadBalancerIP="52.154.156.139" 
+    --set controller.service.loadBalancerIP="137.116.251.139" 
 
 
 # List Services with labels
