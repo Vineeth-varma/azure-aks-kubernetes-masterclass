@@ -235,6 +235,7 @@ terraform providers
 ```
 # Delete newly created Resource Group in Azure 
 terraform destroy
+terraform destroy azurerm_resource_group.<resource_name>   # To delete a specific resource
 
 # Delete State (Deleting for github repo case for course purpose)
 rm -rf .terraform
