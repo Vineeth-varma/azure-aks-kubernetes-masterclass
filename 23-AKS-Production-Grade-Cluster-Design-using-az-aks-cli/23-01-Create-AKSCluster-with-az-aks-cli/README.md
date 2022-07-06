@@ -12,21 +12,19 @@
 - Create Azure AD User, Group for managing AKS Clusters using Azure AD Users
 - Create SSH Keys to enable and access Kubernetes Workernodes via SSH Terminal
 - Create Log Analytics Workspace for enabling Monitoring Add On during AKS Cluster creation  
-- Set Windows Username and Password during AKS Cluster creation to have AKS Cluster support future Windows Nodepools
-
+- Set Windows Username and Password during AKS Cluster creation to have AKS Cluster support for future Windows Nodepools
 
 
 ## Step-02: Pre-requisite-1: Create Resource Group
 ```
 # Edit export statements to make any changes required as per your environment
 # Execute below export statements
-AKS_RESOURCE_GROUP=aks-prod
-AKS_REGION=centralus
+$AKS_RESOURCE_GROUP = 'aks-prod'
+$AKS_REGION = 'centralus'
 echo $AKS_RESOURCE_GROUP, $AKS_REGION
 
 # Create Resource Group
-az group create --location ${AKS_REGION} \
-                --name ${AKS_RESOURCE_GROUP}
+az group create --location ${AKS_REGION} --name ${AKS_RESOURCE_GROUP}
 ```
 
 
@@ -38,12 +36,12 @@ az group create --location ${AKS_REGION} \
 ```
 # Edit export statements to make any changes required as per your environment
 # Execute below export statements 
-AKS_VNET=aks-vnet
-AKS_VNET_ADDRESS_PREFIX=10.0.0.0/8
-AKS_VNET_SUBNET_DEFAULT=aks-subnet-default
-AKS_VNET_SUBNET_DEFAULT_PREFIX=10.240.0.0/16
-AKS_VNET_SUBNET_VIRTUALNODES=aks-subnet-virtual-nodes
-AKS_VNET_SUBNET_VIRTUALNODES_PREFIX=10.241.0.0/16
+$AKS_VNET = 'aks-vnet'
+$AKS_VNET_ADDRESS_PREFIX = '10.0.0.0/8'
+$AKS_VNET_SUBNET_DEFAULT = 'aks-subnet-default'
+$AKS_VNET_SUBNET_DEFAULT_PREFIX = '10.240.0.0/16'
+$AKS_VNET_SUBNET_VIRTUALNODES = 'aks-subnet-virtual-nodes'
+$AKS_VNET_SUBNET_VIRTUALNODES_PREFIX = '10.241.0.0/16'
 
 # Create Virtual Network & default Subnet
 az network vnet create -g ${AKS_RESOURCE_GROUP} \
@@ -60,7 +58,7 @@ az network vnet subnet create \
     --address-prefixes ${AKS_VNET_SUBNET_VIRTUALNODES_PREFIX}
 
 # Get Virtual Network default subnet id
-AKS_VNET_SUBNET_DEFAULT_ID=$(az network vnet subnet show \
+$AKS_VNET_SUBNET_DEFAULT_ID = $(az network vnet subnet show \
                            --resource-group ${AKS_RESOURCE_GROUP} \
                            --vnet-name ${AKS_VNET} \
                            --name ${AKS_VNET_SUBNET_DEFAULT} \
@@ -71,12 +69,12 @@ echo ${AKS_VNET_SUBNET_DEFAULT_ID}
 
 
 ## Step-02: Pre-requisite-3: Create Azure AD Group & Admin User
-- Create Azure AD Group: aksadmins
+- Create Azure AD Group: k8s_aks_demo
 - Create Azure AD User: aksadmin1 and associate to aksadmins ad group
 ```
 # Create Azure AD Group
-AKS_AD_AKSADMIN_GROUP_ID=$(az ad group create --display-name aksadmins --mail-nickname aksadmins --query objectId -o tsv)    
-echo $AKS_AD_AKSADMIN_GROUP_ID
+$AKS_AD_AKSADMIN_GROUP_ID = $(az ad group create --display-name aksadmins --mail-nickname aksadmins --query objectId -o tsv)    
+echo $AKS_AD_AKSADMIN_GROUP_ID = 'a786c0d7-b524-407d-b933-e2487b1fdb3b'
 
 # Create Azure AD AKS Admin User 
 # Replace with your AD Domain - aksadmin1@stacksimplifygmail.onmicrosoft.com
@@ -113,7 +111,7 @@ ssh-keygen \
 ls -lrt $HOME/.ssh/aks-prod-sshkeys
 
 # Set SSH KEY Path
-AKS_SSH_KEY_LOCATION=/Users/kalyanreddy/.ssh/aks-prod-sshkeys/aksprodsshkey.pub
+$AKS_SSH_KEY_LOCATION= 'C:\Users\Vineeth_Birraju\.ssh\aks-prod-sshkeys/aksprodsshkey.pub'
 echo $AKS_SSH_KEY_LOCATION
 ```
 - Reference for [Create SSH Key](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed)
@@ -121,7 +119,7 @@ echo $AKS_SSH_KEY_LOCATION
 ## Step-05: Pre-requisite-5: Create Log Analytics Workspace
 ```
 # Create Log Analytics Workspace
-AKS_MONITORING_LOG_ANALYTICS_WORKSPACE_ID=$(az monitor log-analytics workspace create               --resource-group ${AKS_RESOURCE_GROUP} \
+$AKS_MONITORING_LOG_ANALYTICS_WORKSPACE_ID = $(az monitor log-analytics workspace create               --resource-group ${AKS_RESOURCE_GROUP} \
                                            --workspace-name aksprod-loganalytics-workspace1 \
                                            --query id \
                                            -o tsv)
@@ -136,15 +134,15 @@ echo $AKS_MONITORING_LOG_ANALYTICS_WORKSPACE_ID
 az aks get-versions --location ${AKS_REGION} -o table
 
 # Get Azure Active Directory (AAD) Tenant ID
-AZURE_DEFAULT_AD_TENANTID=$(az account show --query tenantId --output tsv)
+$AZURE_DEFAULT_AD_TENANTID = $(az account show --query tenantId --output tsv)
 echo $AZURE_DEFAULT_AD_TENANTID
 or
 Go to Services -> Azure Active Directory -> Properties -> Tenant ID
 
 
 # Set Windows Server/Node Username & Password
-AKS_WINDOWS_NODE_USERNAME=azureuser
-AKS_WINDOWS_NODE_PASSWORD="P@ssw0rd1234"
+$AKS_WINDOWS_NODE_USERNAME = 'azureuser'
+$AKS_WINDOWS_NODE_PASSWORD = "P@ssw0rd1749671"
 echo $AKS_WINDOWS_NODE_USERNAME, $AKS_WINDOWS_NODE_PASSWORD
 ```
 
@@ -153,7 +151,7 @@ echo $AKS_WINDOWS_NODE_USERNAME, $AKS_WINDOWS_NODE_PASSWORD
 ## Step-07: Create Cluster with System Node Pool
 ```
 # Set Cluster Name
-AKS_CLUSTER=aksprod1
+$AKS_CLUSTER = 'aksprod1'
 echo $AKS_CLUSTER
 
 # Upgrade az CLI  (To latest version)
@@ -188,7 +186,7 @@ az aks create --resource-group ${AKS_RESOURCE_GROUP} \
               --enable-addons monitoring \
               --workspace-resource-id ${AKS_MONITORING_LOG_ANALYTICS_WORKSPACE_ID} \
               --enable-ahub \
-              --zones {1,2,3}
+              --zones 3
 ```
 
 ## Step-08: Configure Credentials & test
