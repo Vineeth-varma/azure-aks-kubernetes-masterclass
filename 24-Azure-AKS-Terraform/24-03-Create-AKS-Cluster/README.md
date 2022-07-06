@@ -23,7 +23,7 @@ ssh-keygen \
     -t rsa \
     -b 4096 \
     -C "azureuser@myserver" \
-    -f ~/.ssh/aks-prod-sshkeys-terraform/aksprodsshkey \
+    -f $HOME/.ssh/aks-prod-sshkeys-terraform/aksprodsshkey \
     -N mypassphrase
 
 # List Files
